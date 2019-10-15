@@ -44,9 +44,11 @@
                       <td><%= link_to '削除', team_assign_path(@team, assign), method: :delete, class: 'btn btn-sm btn-danger' %></td>
                       <td>
                         <%= form_for @team do |f| %>
-                          <%= f.hidden_field :owner_id, value: assign.user_id, class: 'btn btn-sm btn-danger' %>
-                          <%= f.hidden_field :user_id, value: assign.user_id, class: 'btn btn-sm btn-danger' %>
-                          <%= f.submit '権限移動', class: 'btn btn-primary' %>
+                          <% if @team.owner.id == current_user.id && assign.user_id != current_user.id %>
+                            <%= f.hidden_field :owner_id, value: assign.user_id, class: 'btn btn-sm btn-danger' %>
+                            <%= f.hidden_field :user_id, value: assign.user_id, class: 'btn btn-sm btn-danger' %>
+                            <%= f.submit '権限移動', class: 'btn btn-primary' %>
+                          <% end %>
                         <% end %>
                       </td>
                     </tr>
