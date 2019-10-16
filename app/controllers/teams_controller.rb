@@ -15,7 +15,8 @@ class TeamsController < ApplicationController
     @team = Team.new
   end
 
-  def edit; end
+  def edit
+  end
 
   def create
     @team = Team.new(team_params)
@@ -36,6 +37,13 @@ class TeamsController < ApplicationController
       flash.now[:error] = '保存に失敗しました、、'
       render :edit
     end
+  end
+
+  def switching
+    @team = Team.find_by(name: params[:team_id])
+    @team.update(owner_id: params[:id])
+    SwitchingMailer.switching_mail(@switching).deliver
+    redirect_to @team, notice: '権限を移動しました！'
   end
 
   def destroy
