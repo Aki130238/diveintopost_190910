@@ -21,6 +21,15 @@ class AgendasController < ApplicationController
     end
   end
 
+  def destroy
+    @agenda = Agenda.find(params[:id])
+    @agenda.destroy
+    Team.find(@agenda.team_id).assigns.each do |assign|
+      NotifyMailer.notify_mail(assign.user.email).deliver
+    end
+    redirect_to dashboard_url, notice: 'アジェンダ削除に成功しました！'
+  end
+
   private
 
   def set_agenda
