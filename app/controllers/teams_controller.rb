@@ -31,14 +31,19 @@ class TeamsController < ApplicationController
   end
 
   def update
-    @user = User.find(params[:team][:user_id])
     if @team.update(team_params)
-      @team.owner_id = @user.id
       redirect_to @team, notice: 'チーム更新に成功しました！'
     else
       flash.now[:error] = '保存に失敗しました、、'
       render :edit
     end
+  end
+
+  def switching
+    @team = Team.find_by(name: params[:team_id])
+    @team.update(owner_id: params[:id])
+    SwitchingMailer.switching_mail(@switching).deliver
+    redirect_to @team, notice: '権限を移動しました！'
   end
 
   def destroy
